@@ -34,7 +34,19 @@ func Convert(markdown []byte) (*Result, error) {
 	}
 
 	toc, body := splitTOC(extractBody(stdout.String()))
-	return &Result{Body: body, TOC: toc}, nil
+	return &Result{Body: injectCopyButtons(body), TOC: toc}, nil
+}
+
+// injectCopyButtons inserts a copy button inside every <pre> block so that
+// the JS in copy.js can bind to it without touching the DOM structure.
+func injectCopyButtons(html string) string {
+	const btn = `<button class="copy-btn" aria-label="Copy">` +
+		`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" ` +
+		`stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">` +
+		`<rect x="9" y="9" width="13" height="13" rx="2"/>` +
+		`<path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>` +
+		`</svg></button>`
+	return strings.ReplaceAll(html, `</pre>`, btn+`</pre>`)
 }
 
 // extractBody pulls the content between <body> and </body> from a standalone

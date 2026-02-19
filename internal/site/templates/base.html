@@ -32,6 +32,7 @@
   <main>
     {{block "content" .}}{{end}}
   </main>
+  <script src="/copy.js" defer></script>
   <script>
     const socket = new WebSocket('ws://' + location.host + '/__reload');
     socket.onmessage = (e) => {
