@@ -2,8 +2,10 @@ package config
 
 import (
 	"fmt"
+	"net/url"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"gopkg.in/yaml.v3"
 )
@@ -20,6 +22,7 @@ type FrontMatterDefaults struct {
 type Config struct {
 	Title               string              `yaml:"title"`
 	BaseURL             string              `yaml:"base_url"`
+	BasePath            string              `yaml:"-"` // derived from BaseURL, e.g. "/~john"
 	Hero                HeroConfig          `yaml:"hero"`
 	Nav                 map[string]string   `yaml:"nav"`
 	L10n                map[string]string   `yaml:"l10n"`
@@ -37,5 +40,12 @@ func Load(projectRoot string) (*Config, error) {
 	if err := yaml.Unmarshal(data, &cfg); err != nil {
 		return nil, fmt.Errorf("parsing blog.yaml: %w", err)
 	}
+
+	if cfg.BaseURL != "" {
+		if u, err := url.Parse(cfg.BaseURL); err == nil {
+			cfg.BasePath = strings.TrimRight(u.Path, "/")
+		}
+	}
+
 	return &cfg, nil
 }

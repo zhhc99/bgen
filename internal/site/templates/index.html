@@ -14,14 +14,14 @@
   {{range .Site.Posts}}
   <li class="post-entry">
     {{if .Cover}}
-    <a href="{{.URL}}"><img src="{{.Cover}}" alt="{{.Title}}" class="post-cover"></a>
+    <a href="{{$.Site.Config.BasePath}}{{.URL}}"><img src="{{$.Site.Config.BasePath}}{{.Cover}}" alt="{{.Title}}" class="post-cover"></a>
     {{end}}
     <div class="post-entry-body">
-      <a href="{{.URL}}" class="post-title">{{.Title}}</a>
+      <a href="{{$.Site.Config.BasePath}}{{.URL}}" class="post-title">{{.Title}}</a>
       <div class="post-meta">
         <span class="date">{{.Date.Format "2006-01-02"}}</span>
         {{if .Tags}}
-        <span class="tags">{{range .Tags}}<a href="/tags/{{.}}/">{{.}}</a>{{end}}</span>
+        <span class="tags">{{range .Tags}}<a href="{{$.Site.Config.BasePath}}/tags/{{.}}/">{{.}}</a>{{end}}</span>
         {{end}}
       </div>
       {{if .Summary}}<p class="post-summary">{{.Summary}}</p>{{end}}

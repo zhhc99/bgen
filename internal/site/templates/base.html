@@ -4,7 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{{block "title" .}}{{.Site.Config.Title}}{{end}}</title>
-  <link rel="stylesheet" href="/style.css">
+  <meta name="base-path" content="{{.Site.Config.BasePath}}">
+  <link rel="stylesheet" href="{{.Site.Config.BasePath}}/style.css">
   <script>
     window.MathJax = {
       loader: { load: ['[tex]/mathtools'] },
@@ -21,18 +22,18 @@
 <body>
   <header>
     <nav>
-      <a href="/" class="site-title">{{.Site.Config.Title}}</a>
+      <a href="{{.Site.Config.BasePath}}/" class="site-title">{{.Site.Config.Title}}</a>
       <span class="nav-links">
-        {{if index .Site.Config.Nav "search"}}<a href="/search/">{{index .Site.Config.Nav "search"}}</a>{{end}}
-        {{if index .Site.Config.Nav "tags"}}<a href="/tags/">{{index .Site.Config.Nav "tags"}}</a>{{end}}
-        {{range $slug, $p := .Site.Pages}}<a href="{{$p.URL}}">{{$p.Title}}</a>{{end}}
+        {{if index .Site.Config.Nav "search"}}<a href="{{.Site.Config.BasePath}}/search/">{{index .Site.Config.Nav "search"}}</a>{{end}}
+        {{if index .Site.Config.Nav "tags"}}<a href="{{.Site.Config.BasePath}}/tags/">{{index .Site.Config.Nav "tags"}}</a>{{end}}
+        {{range $slug, $p := .Site.Pages}}<a href="{{$.Site.Config.BasePath}}{{$p.URL}}">{{$p.Title}}</a>{{end}}
       </span>
     </nav>
   </header>
   <main>
     {{block "content" .}}{{end}}
   </main>
-  <script src="/copy.js" defer></script>
+  <script src="{{.Site.Config.BasePath}}/copy.js" defer></script>
   <script>
     const socket = new WebSocket('ws://' + location.host + '/__reload');
     socket.onmessage = (e) => {

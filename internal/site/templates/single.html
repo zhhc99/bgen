@@ -6,10 +6,10 @@
   <div class="meta">
     <time>{{.Post.Date.Format "2006-01-02"}}</time>
     {{if .Post.Author}}<span>{{.Post.Author}}</span>{{end}}
-    {{if .Post.Tags}}{{range .Post.Tags}}<a href="/tags/{{.}}/">#{{.}}</a> {{end}}{{end}}
+    {{if .Post.Tags}}{{range .Post.Tags}}<a href="{{$.Site.Config.BasePath}}/tags/{{.}}/">#{{.}}</a> {{end}}{{end}}
   </div>
   {{if .Post.Cover}}
-  <img src="{{.Post.Cover}}" alt="{{.Post.Title}}" class="featured-image">
+  <img src="{{.Site.Config.BasePath}}{{.Post.Cover}}" alt="{{.Post.Title}}" class="featured-image">
   {{end}}
   {{if .Post.TOC}}
   <details class="toc">

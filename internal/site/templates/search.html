@@ -1,20 +1,21 @@
 {{template "base.html" .}}
-{{define "title"}}Search - {{.Site.Config.Title}}{{end}}
+{{define "title"}}{{index .Site.Config.Nav "search"}} - {{.Site.Config.Title}}{{end}}
 {{define "content"}}
-<h1>Search</h1>
+{{if index .Site.Config.Nav "search"}}<h1>{{index .Site.Config.Nav "search"}}</h1>{{end}}
 <input id="q" type="text" class="search-input" placeholder="Search posts..." autofocus>
 <ul id="results" class="post-list"></ul>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@7/dist/fuse.min.js"></script>
 <script>
+const basePath = document.querySelector('meta[name="base-path"]').content;
 let idx = null;
-fetch('/search.json').then(r => r.json()).then(data => {
+fetch(basePath + '/search.json').then(r => r.json()).then(data => {
   idx = new Fuse(data, { keys: ['title'], threshold: 0.4 });
 });
 document.getElementById('q').addEventListener('input', function() {
   if (!idx) return;
   const res = this.value ? idx.search(this.value) : [];
   document.getElementById('results').innerHTML = res
-    .map(r => `<li><div class="row"><span class="date">${r.item.date}</span><a href="${r.item.url}">${r.item.title}</a></div></li>`)
+    .map(r => `<li><div class="row"><span class="date">${r.item.date}</span><a href="${basePath}${r.item.url}">${r.item.title}</a></div></li>`)
     .join('');
 });
 </script>

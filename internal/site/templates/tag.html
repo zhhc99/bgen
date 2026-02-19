@@ -6,7 +6,7 @@
   {{range .Posts}}
   <li>
     <span class="date">{{.Date.Format "2006-01-02"}}</span>
-    <a href="{{.URL}}">{{.Title}}</a>
+    <a href="{{$.Site.Config.BasePath}}{{.URL}}">{{.Title}}</a>
   </li>
   {{end}}
 </ul>
