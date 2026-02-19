@@ -1,0 +1,10 @@
+{{template "base.html" .}}
+{{define "title"}}Tags - {{.Site.Config.Title}}{{end}}
+{{define "content"}}
+<h1>Tags</h1>
+<ul class="tag-list">
+  {{range $tag, $posts := .Site.Tags}}
+  <li><a href="/tags/{{$tag}}/">#{{$tag}}</a> ({{len $posts}})</li>
+  {{end}}
+</ul>
+{{end}}

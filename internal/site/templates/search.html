@@ -1,0 +1,21 @@
+{{template "base.html" .}}
+{{define "title"}}Search - {{.Site.Config.Title}}{{end}}
+{{define "content"}}
+<h1>Search</h1>
+<input id="q" type="text" class="search-input" placeholder="Search posts..." autofocus>
+<ul id="results" class="post-list"></ul>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@7/dist/fuse.min.js"></script>
+<script>
+let idx = null;
+fetch('/search.json').then(r => r.json()).then(data => {
+  idx = new Fuse(data, { keys: ['title'], threshold: 0.4 });
+});
+document.getElementById('q').addEventListener('input', function() {
+  if (!idx) return;
+  const res = this.value ? idx.search(this.value) : [];
+  document.getElementById('results').innerHTML = res
+    .map(r => `<li><div class="row"><span class="date">${r.item.date}</span><a href="${r.item.url}">${r.item.title}</a></div></li>`)
+    .join('');
+});
+</script>
+{{end}}

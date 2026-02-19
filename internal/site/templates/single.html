@@ -1,0 +1,22 @@
+{{template "base.html" .}}
+{{define "title"}}{{.Post.Title}} - {{.Site.Config.Title}}{{end}}
+{{define "content"}}
+<article>
+  <h1>{{.Post.Title}}</h1>
+  <div class="meta">
+    <time>{{.Post.Date.Format "2006-01-02"}}</time>
+    {{if .Post.Author}}<span>{{.Post.Author}}</span>{{end}}
+    {{if .Post.Tags}}{{range .Post.Tags}}<a href="/tags/{{.}}/">#{{.}}</a> {{end}}{{end}}
+  </div>
+  {{if .Post.Cover}}
+  <img src="{{.Post.Cover}}" alt="{{.Post.Title}}" class="featured-image">
+  {{end}}
+  {{if .Post.TOC}}
+  <details class="toc">
+    <summary>{{index .Site.Config.L10n "toc"}}</summary>
+    {{.Post.TOC}}
+  </details>
+  {{end}}
+  <div class="content">{{.Post.Content}}</div>
+</article>
+{{end}}

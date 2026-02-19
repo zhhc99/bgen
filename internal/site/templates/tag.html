@@ -1,0 +1,13 @@
+{{template "base.html" .}}
+{{define "title"}}#{{.Tag}} - {{.Site.Config.Title}}{{end}}
+{{define "content"}}
+<h1>#{{.Tag}}</h1>
+<ul class="post-list">
+  {{range .Posts}}
+  <li>
+    <span class="date">{{.Date.Format "2006-01-02"}}</span>
+    <a href="{{.URL}}">{{.Title}}</a>
+  </li>
+  {{end}}
+</ul>
+{{end}}

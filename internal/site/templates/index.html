@@ -1,0 +1,33 @@
+{{template "base.html" .}}
+{{define "content"}}
+{{if or .Site.Config.Hero.Header .Site.Config.Hero.Content}}
+<section class="hero">
+  <div class="entry-header">
+    <h1>{{.Site.Config.Hero.Header}}</h1>
+  </div>
+  <div class="entry-content">
+    {{.Site.Config.Hero.Content}}
+  </div>
+</section>
+{{end}}
+<ul class="post-list">
+  {{range .Site.Posts}}
+  <li class="post-entry">
+    {{if .Cover}}
+    <a href="{{.URL}}"><img src="{{.Cover}}" alt="{{.Title}}" class="post-cover"></a>
+    {{end}}
+    <div class="post-entry-body">
+      <a href="{{.URL}}" class="post-title">{{.Title}}</a>
+      <div class="post-meta">
+        <span class="date">{{.Date.Format "2006-01-02"}}</span>
+        {{if .Tags}}
+        <span class="tags">{{range .Tags}}<a href="/tags/{{.}}/">{{.}}</a>{{end}}</span>
+        {{end}}
+      </div>
+      {{if .Summary}}<p class="post-summary">{{.Summary}}</p>{{end}}
+    </div>
+  </li>
+  {{end}}
+  {{if not .Site.Posts}}<li style="color:var(--muted);padding:1rem 0">暂无文章.</li>{{end}}
+</ul>
+{{end}}
