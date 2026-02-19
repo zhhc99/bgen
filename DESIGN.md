@@ -55,7 +55,7 @@ bgen help
 默认模板和样式内置在二进制里 (embed). 用户在项目根目录放同名文件即可覆盖:
 
 - `layouts/single.html` 覆盖文章页模板
-- `statics/style.css` 覆盖样式
+- `static/style.css` 覆盖样式
 
 默认样式应是真正好看的, 干净的, 不是 placeholder. 用户不覆盖也能直接用.
 
