@@ -149,4 +149,4 @@ git push origin vX.Y.Z
 
 bgen 是我对此交出的答卷.
 
-我弄了一个工具 `hugo2bgen` 用来从 hugo 快速迁移. 工具可以处理 frontmatter 的字段并迁移封面图, 不修改原始文件.
+我弄了一个工具 [hugo2bgen](https://github.com/zhhc99/hugo2bgen/) 用来从 hugo 快速迁移. 工具可以处理 frontmatter 的字段并迁移封面图, 不修改原始文件.
