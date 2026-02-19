@@ -3,12 +3,23 @@ package main
 import (
 	"fmt"
 	"os"
+	"runtime/debug"
 
 	"github.com/zhhc99/bgen/internal/build"
 	"github.com/zhhc99/bgen/internal/server"
 )
 
 var Version = "dev"
+
+func version() string {
+	if Version != "dev" {
+		return Version
+	}
+	if info, ok := debug.ReadBuildInfo(); ok && info.Main.Version != "" && info.Main.Version != "(devel)" {
+		return info.Main.Version
+	}
+	return Version
+}
 
 func main() {
 	if len(os.Args) < 2 {
@@ -23,7 +34,7 @@ func main() {
 	case "serve":
 		err = server.Run(".")
 	case "version":
-		fmt.Println(Version)
+		fmt.Println(version())
 		return
 	case "-h", "--help", "help":
 		printUsage()
