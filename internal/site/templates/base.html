@@ -35,10 +35,12 @@
   </main>
   <script src="{{.Site.Config.BasePath}}/copy.js" defer></script>
   <script>
-    const socket = new WebSocket('ws://' + location.host + '/__reload');
-    socket.onmessage = (e) => {
-      if (e.data === 'reload') location.reload();
-    };
+    if (location.hostname === 'localhost' || location.hostname === '127.0.0.1') {
+      var socket = new WebSocket('ws://' + location.host + '/__reload');
+      socket.onmessage = function (e) {
+        if (e.data === 'reload') location.reload();
+      };
+    }
   </script>
 </body>
 </html>
