@@ -312,3 +312,14 @@ main > h1 {
   article h1 { font-size: 1.55rem; }
   header nav { flex-direction: column; gap: 0.6rem; align-items: flex-start; }
 }
+
+/* ── Dark mode ── */
+html[data-theme="dark"] {
+  --bg:      hsl(60, 2.7%, 14.5%);
+  --card-bg: hsl(60, 2.5%, 18%);
+  --code-bg: hsl(60, 2.0%, 11%);
+  --fg:      hsl(60, 8.0%, 88%);
+  --text-2:  hsl(60, 3.0%, 62%);
+  --muted:   hsl(60, 2.0%, 42%);
+  --border:  hsl(60, 2.0%, 22%);
+}
