@@ -42,6 +42,7 @@ func Load(projectRoot string) (*Config, error) {
 	}
 
 	if cfg.BaseURL != "" {
+		cfg.BaseURL = strings.TrimRight(cfg.BaseURL, "/")
 		if u, err := url.Parse(cfg.BaseURL); err == nil {
 			cfg.BasePath = strings.TrimRight(u.Path, "/")
 		}
