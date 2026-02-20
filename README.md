@@ -109,6 +109,7 @@ A: 主题由 style (外观) 和 layout (布局) 构成.
 
 - style: 位于 `static/style.css`, 找不到时回退到内置模板.
 - layout: 位于 `layouts/`, 找不到时回退到内置模板.
+- 更多信息见 [THEME.md](./doc/THEME.md)
 
 **Q: layout 有哪些?**
 
