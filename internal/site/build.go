@@ -35,6 +35,9 @@ func (s *Site) Build(projectRoot string) error {
 	if err := s.render(projectRoot, outPath); err != nil {
 		return fmt.Errorf("rendering: %w", err)
 	}
+	if err := buildFeed(projectRoot, s); err != nil {
+		return fmt.Errorf("building feed: %w", err)
+	}
 	return nil
 }
 

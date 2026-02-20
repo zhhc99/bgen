@@ -6,6 +6,7 @@
   <title>{{block "title" .}}{{.Site.Config.Title}}{{end}}</title>
   <meta name="base-path" content="{{.Site.Config.BasePath}}">
   <link rel="stylesheet" href="{{.Site.Config.BasePath}}/style.css">
+  <link rel="alternate" type="application/rss+xml" title="{{.Site.Config.Title}}" href="{{.Site.Config.BasePath}}/feed.xml">
   <script>
     window.MathJax = {
       loader: { load: ['[tex]/mathtools'] },
