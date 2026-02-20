@@ -47,7 +47,7 @@ func (b *broker) broadcast() {
 }
 
 func Run(projectRoot string) error {
-	if err := build.Run(projectRoot); err != nil {
+	if err := build.RunDev(projectRoot); err != nil {
 		return err
 	}
 
@@ -134,7 +134,7 @@ func startWatcher(projectRoot string, b *broker) error {
 				}
 				timer = time.AfterFunc(500*time.Millisecond, func() {
 					log.Println("bgen: change detected, rebuilding...")
-					if err := build.Run(projectRoot); err != nil {
+					if err := build.RunDev(projectRoot); err != nil {
 						log.Printf("bgen: build error: %v\n", err)
 						return
 					}
