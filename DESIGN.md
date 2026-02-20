@@ -44,6 +44,7 @@ bgen 是一个用 Go 写的极简静态博客生成器. 目标用户是追求简
 ## 命令行
 
 ```
+bgen init         # 初始化目录结构
 bgen build        # 构建到 output/
 bgen serve        # dev server, watch + reload
 bgen version
