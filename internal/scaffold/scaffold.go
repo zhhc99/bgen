@@ -85,7 +85,7 @@ Welcome to bgen! Write your posts in Markdown right here.
 
 ## Code
 
-Syntax highlighting works out of the box:
+Syntax highlighting:
 
 ` + "```" + `python
 def greet(name: str) -> str:
@@ -127,9 +127,9 @@ place ` + "`index.md`" + ` and all related files in a folder together.
 
 ` + "```" + `
 content/posts/my-bundle-post/
-├── index.md          ← this file
-├── cover.jpg         ← cover image
-└── laifu-the-cat.png ← referenced in the post body
+├── index.md           ← this file
+├── cover.jpg          ← cover image
+└── laifu-the-cat.webp ← referenced in the post body
 ` + "```" + `
 
 Then reference images with relative paths:
