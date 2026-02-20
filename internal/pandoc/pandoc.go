@@ -18,6 +18,7 @@ func Convert(markdown []byte) (*Result, error) {
 		"-t", "html",
 		"--standalone", // required: pandoc only emits <nav id="TOC"> in standalone mode
 		"--mathjax",
+		"--no-highlight", // disable pandoc's built-in highlighting; we use highlight.js in base.html
 		"--toc",
 		"--toc-depth=3",
 	}
