@@ -1,6 +1,7 @@
 package build_test
 
 import (
+	"bytes"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -109,10 +110,10 @@ func TestBuild_PostContent(t *testing.T) {
 	if err != nil {
 		t.Fatalf("reading post html: %v", err)
 	}
-	if !contains(postHTML, "Hello World") {
+	if !bytes.Contains(postHTML, []byte("Hello World")) {
 		t.Error("post page missing title")
 	}
-	if !contains(postHTML, "这是第一篇测试文章的正文") {
+	if !bytes.Contains(postHTML, []byte("这是第一篇测试文章的正文")) {
 		t.Error("post page missing body content")
 	}
 
@@ -121,10 +122,10 @@ func TestBuild_PostContent(t *testing.T) {
 	if err != nil {
 		t.Fatalf("reading index html: %v", err)
 	}
-	if !contains(indexHTML, "Hello World") {
+	if !bytes.Contains(indexHTML, []byte("Hello World")) {
 		t.Error("index page missing post title")
 	}
-	if !contains(indexHTML, "Math Post") {
+	if !bytes.Contains(indexHTML, []byte("Math Post")) {
 		t.Error("index page missing post title")
 	}
 }
@@ -152,28 +153,4 @@ func TestBuild_Idempotent(t *testing.T) {
 	if err := build.Run(dir); err != nil {
 		t.Fatalf("second build: %v", err)
 	}
-}
-
-func contains(data []byte, s string) bool {
-	return len(data) > 0 && string(data) != "" &&
-		len(s) > 0 && indexBytes(data, []byte(s)) >= 0
-}
-
-func indexBytes(haystack, needle []byte) int {
-	for i := range haystack {
-		if i+len(needle) > len(haystack) {
-			break
-		}
-		match := true
-		for j := range needle {
-			if haystack[i+j] != needle[j] {
-				match = false
-				break
-			}
-		}
-		if match {
-			return i
-		}
-	}
-	return -1
 }
