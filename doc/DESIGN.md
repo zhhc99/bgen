@@ -6,6 +6,13 @@ bgen 是一个用 Go 写的极简静态博客生成器. 目标用户是追求简
 
 见 `README.md` "📝 配置项和约定".
 
+## 编码格式原则
+
+- 代码自述, 尽量避免注释.
+- 当代码无法自述时, 用中文写简洁注释.
+- 任何时候都不允许使用中文标点. 只能使用英文标点.
+- 在规范的前提下, 尽量用最简短的代码实现功能.
+
 ## bgen 做的事
 
 1. 读取 `content/` 下所有 markdown 文件
@@ -60,11 +67,15 @@ bgen help
 
 默认样式应是真正好看的, 干净的, 不是 placeholder. 用户不覆盖也能直接用.
 
+## 计划做的事
+
+- serve 输出到 temp 而不是 output
+- pandoc parse 应该用 errgroup
+- `extractImageRefs` 也支持内嵌 html, 如 `<img src="...">`
+- 用 bgen 生成的 example & usage site
+
 ## 不做的事
 
 - 文章的 l10n (责任不在写作者)
-- RSS (可以后加, 不是优先级)
-- 多输出格式
-- Image processing
 - 复杂 taxonomy (只有 tags, 没有 categories)
 - 任何需要文档才能理解的配置项

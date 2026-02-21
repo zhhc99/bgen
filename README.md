@@ -4,7 +4,7 @@
 [![Go Version](https://img.shields.io/github/go-mod/go-version/zhhc99/bgen)](https://github.com/zhhc99/bgen)
 [![Latest Release](https://img.shields.io/github/v/release/zhhc99/bgen)](https://github.com/zhhc99/bgen/releases)
 
-**静态博客站点生成器.**
+**bgen / BlogGEN 是一个静态博客站点生成器.**
 
 核心想法: 把时间花在用 Markdown 书写博文, 而不是做各种配置上.
 
