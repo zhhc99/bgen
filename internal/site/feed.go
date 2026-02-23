@@ -57,7 +57,7 @@ type rssCDATA struct {
 	Value string `xml:",cdata"`
 }
 
-func buildFeed(projectRoot string, s *Site) error {
+func buildFeed(outDir string, s *Site) error {
 	if s.Config.BaseURL == "" {
 		return nil
 	}
@@ -99,7 +99,7 @@ func buildFeed(projectRoot string, s *Site) error {
 	}
 
 	out := append([]byte(xml.Header), data...)
-	return os.WriteFile(filepath.Join(projectRoot, "output", "feed.xml"), out, 0644)
+	return os.WriteFile(filepath.Join(outDir, "feed.xml"), out, 0644)
 }
 
 func buildContent(p *Post, baseURL, postURL string) string {

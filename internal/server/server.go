@@ -1,12 +1,16 @@
 package server
 
 import (
+	"context"
 	"fmt"
 	"io/fs"
 	"log"
 	"net/http"
+	"os"
+	"os/signal"
 	"path/filepath"
 	"sync"
+	"syscall"
 	"time"
 
 	"github.com/coder/websocket"
@@ -47,19 +51,24 @@ func (b *broker) broadcast() {
 }
 
 func Run(projectRoot string) error {
-	if err := build.RunDev(projectRoot); err != nil {
+	tmpDir, err := os.MkdirTemp("", "bgen-serve-*")
+	if err != nil {
+		return fmt.Errorf("creating temp dir: %w", err)
+	}
+	defer os.RemoveAll(tmpDir)
+
+	if err := build.RunDev(projectRoot, tmpDir); err != nil {
 		return err
 	}
 
 	b := &broker{clients: make(map[chan struct{}]struct{})}
 
-	if err := startWatcher(projectRoot, b); err != nil {
+	if err := startWatcher(projectRoot, tmpDir, b); err != nil {
 		return err
 	}
 
-	outPath := filepath.Join(projectRoot, "output")
 	mux := http.NewServeMux()
-	mux.Handle("/", http.FileServer(http.Dir(outPath)))
+	mux.Handle("/", http.FileServer(http.Dir(tmpDir)))
 	mux.HandleFunc("/__reload", func(w http.ResponseWriter, r *http.Request) {
 		conn, err := websocket.Accept(w, r, &websocket.AcceptOptions{
 			InsecureSkipVerify: true,
@@ -83,8 +92,21 @@ func Run(projectRoot string) error {
 		}
 	})
 
+	srv := &http.Server{Addr: defaultAddr, Handler: mux}
+
+	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
+	defer stop()
+
+	go func() {
+		<-ctx.Done()
+		_ = srv.Shutdown(context.Background())
+	}()
+
 	fmt.Printf("bgen: serving at http://localhost%s\n", defaultAddr)
-	return http.ListenAndServe(defaultAddr, mux)
+	if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+		return err
+	}
+	return nil
 }
 
 // addDirRecursive 将 dir 下所有子目录（包括自身）加入 watcher.
@@ -99,7 +121,7 @@ func addDirRecursive(w *fsnotify.Watcher, dir string) {
 	})
 }
 
-func startWatcher(projectRoot string, b *broker) error {
+func startWatcher(projectRoot, outDir string, b *broker) error {
 	w, err := fsnotify.NewWatcher()
 	if err != nil {
 		return fmt.Errorf("creating watcher: %w", err)
@@ -134,7 +156,7 @@ func startWatcher(projectRoot string, b *broker) error {
 				}
 				timer = time.AfterFunc(500*time.Millisecond, func() {
 					log.Println("bgen: change detected, rebuilding...")
-					if err := build.RunDev(projectRoot); err != nil {
+					if err := build.RunDev(projectRoot, outDir); err != nil {
 						log.Printf("bgen: build error: %v\n", err)
 						return
 					}

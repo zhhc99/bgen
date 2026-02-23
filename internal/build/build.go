@@ -7,26 +7,28 @@ import (
 	"github.com/zhhc99/bgen/internal/site"
 )
 
-func Run(projectRoot string) error {
-	return runWithConfig(projectRoot, func(cfg *config.Config) {})
-}
-
-func RunDev(projectRoot string) error {
-	return runWithConfig(projectRoot, func(cfg *config.Config) {
-		cfg.BasePath = ""
-	})
-}
-
-func runWithConfig(projectRoot string, patch func(*config.Config)) error {
+func Run(projectRoot, outDir string) error {
 	cfg, err := config.Load(projectRoot)
 	if err != nil {
 		return fmt.Errorf("loading config: %w", err)
 	}
-	patch(cfg)
 	s := site.New(cfg)
-	if err := s.Build(projectRoot); err != nil {
+	if err := s.Build(projectRoot, outDir); err != nil {
 		return fmt.Errorf("building site: %w", err)
 	}
-	fmt.Println("build complete -> output/")
+	fmt.Printf("build complete -> %s\n", outDir)
+	return nil
+}
+
+func RunDev(projectRoot, outDir string) error {
+	cfg, err := config.Load(projectRoot)
+	if err != nil {
+		return fmt.Errorf("loading config: %w", err)
+	}
+	cfg.BasePath = ""
+	s := site.New(cfg)
+	if err := s.Build(projectRoot, outDir); err != nil {
+		return fmt.Errorf("building site: %w", err)
+	}
 	return nil
 }

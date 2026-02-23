@@ -69,7 +69,6 @@ bgen help
 
 ## 计划做的事
 
-- serve 输出到 temp 而不是 output
 - pandoc parse 应该用 errgroup
 - `extractImageRefs` 也支持内嵌 html, 如 `<img src="...">`
 - 用 bgen 生成的 example & usage site

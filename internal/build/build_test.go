@@ -67,27 +67,28 @@ func TestBuild_Smoke(t *testing.T) {
 	}
 
 	dir := makeProject(t)
+	outDir := filepath.Join(dir, "output")
 
-	if err := build.Run(dir); err != nil {
+	if err := build.Run(dir, outDir); err != nil {
 		t.Fatalf("build.Run: %v", err)
 	}
 
 	// 断言关键输出文件存在
 	wantFiles := []string{
-		"output/index.html",
-		"output/404.html",
-		"output/posts/hello/index.html",
-		"output/posts/math/index.html",
-		"output/tags/index.html",
-		"output/tags/go/index.html",
-		"output/tags/test/index.html",
-		"output/search/index.html",
-		"output/search.json",
-		"output/about/index.html",
-		"output/style.css",
+		"index.html",
+		"404.html",
+		"posts/hello/index.html",
+		"posts/math/index.html",
+		"tags/index.html",
+		"tags/go/index.html",
+		"tags/test/index.html",
+		"search/index.html",
+		"search.json",
+		"about/index.html",
+		"style.css",
 	}
 	for _, rel := range wantFiles {
-		path := filepath.Join(dir, rel)
+		path := filepath.Join(outDir, rel)
 		if _, err := os.Stat(path); err != nil {
 			t.Errorf("missing output file: %s", rel)
 		}
@@ -100,13 +101,14 @@ func TestBuild_PostContent(t *testing.T) {
 	}
 
 	dir := makeProject(t)
+	outDir := filepath.Join(dir, "output")
 
-	if err := build.Run(dir); err != nil {
+	if err := build.Run(dir, outDir); err != nil {
 		t.Fatalf("build.Run: %v", err)
 	}
 
 	// 文章页应包含标题
-	postHTML, err := os.ReadFile(filepath.Join(dir, "output/posts/hello/index.html"))
+	postHTML, err := os.ReadFile(filepath.Join(outDir, "posts/hello/index.html"))
 	if err != nil {
 		t.Fatalf("reading post html: %v", err)
 	}
@@ -118,7 +120,7 @@ func TestBuild_PostContent(t *testing.T) {
 	}
 
 	// 首页应包含两篇文章的标题
-	indexHTML, err := os.ReadFile(filepath.Join(dir, "output/index.html"))
+	indexHTML, err := os.ReadFile(filepath.Join(outDir, "index.html"))
 	if err != nil {
 		t.Fatalf("reading index html: %v", err)
 	}
@@ -133,7 +135,7 @@ func TestBuild_PostContent(t *testing.T) {
 func TestBuild_MissingConfig(t *testing.T) {
 	dir := t.TempDir() // 空目录, 没有 blog.yaml
 
-	err := build.Run(dir)
+	err := build.Run(dir, filepath.Join(dir, "output"))
 	if err == nil {
 		t.Fatal("expected error for missing blog.yaml, got nil")
 	}
@@ -145,12 +147,13 @@ func TestBuild_Idempotent(t *testing.T) {
 	}
 
 	dir := makeProject(t)
+	outDir := filepath.Join(dir, "output")
 
 	// 连续构建两次, 都应该成功
-	if err := build.Run(dir); err != nil {
+	if err := build.Run(dir, outDir); err != nil {
 		t.Fatalf("first build: %v", err)
 	}
-	if err := build.Run(dir); err != nil {
+	if err := build.Run(dir, outDir); err != nil {
 		t.Fatalf("second build: %v", err)
 	}
 }

@@ -15,15 +15,13 @@ import (
 
 const (
 	contentDir = "content"
-	outputDir  = "output"
 	postsDir   = "content/posts"
 )
 
 var coverExts = []string{"jpg", "jpeg", "png", "webp", "gif"}
 
-func (s *Site) Build(projectRoot string) error {
-	outPath := filepath.Join(projectRoot, outputDir)
-	if err := os.MkdirAll(outPath, 0755); err != nil {
+func (s *Site) Build(projectRoot, outDir string) error {
+	if err := os.MkdirAll(outDir, 0755); err != nil {
 		return fmt.Errorf("creating output dir: %w", err)
 	}
 	if err := s.loadPosts(filepath.Join(projectRoot, postsDir)); err != nil {
@@ -32,10 +30,10 @@ func (s *Site) Build(projectRoot string) error {
 	if err := s.loadPages(filepath.Join(projectRoot, contentDir)); err != nil {
 		return fmt.Errorf("loading pages: %w", err)
 	}
-	if err := s.render(projectRoot, outPath); err != nil {
+	if err := s.render(projectRoot, outDir); err != nil {
 		return fmt.Errorf("rendering: %w", err)
 	}
-	if err := buildFeed(projectRoot, s); err != nil {
+	if err := buildFeed(outDir, s); err != nil {
 		return fmt.Errorf("building feed: %w", err)
 	}
 	return nil
