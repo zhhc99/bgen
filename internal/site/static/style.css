@@ -271,10 +271,17 @@ details.toc a:hover { color: var(--accent); }
 .content figure { margin: 1.5rem 0; }
 .content figcaption { font-size: 0.83rem; color: var(--muted); text-align: center; margin-top: 0.6rem; font-style: italic; }
 
-.content table { width: 100%; border-collapse: collapse; font-size: 0.93rem; margin: 1.5rem 0; }
+.content table { width: 100%; border-collapse: collapse; font-size: 0.93rem; margin: 1.5rem 0; display: block; overflow-x: auto; }
 .content th, .content td { text-align: left; padding: 0.65rem 1rem; border-bottom: 1px solid var(--border); }
 .content th { font-weight: 600; background: var(--code-bg); border-bottom: 2px solid var(--accent); }
 .content tbody tr:hover { background: var(--code-bg); }
+
+.content mjx-container[display="true"] {
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  max-width: 100%;
+}
 
 /* ── 标签页 ── */
 .tag-list { list-style: none; }
