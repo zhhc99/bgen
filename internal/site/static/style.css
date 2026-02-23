@@ -18,7 +18,7 @@
 }
 
 html {
-  font-size: 18px;
+  font-size: 17px;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -198,15 +198,16 @@ details.toc a:hover { color: var(--accent); }
 .content li { margin-bottom: 0.25rem; }
 
 .content blockquote {
-  border-left: 4px solid var(--accent);
+  border-left: 2px solid var(--accent);
   margin: 1.5rem 0;
   padding: 0.4rem 0 0.4rem 1.4rem;
   color: var(--text-2);
-  font-style: italic;
   background: var(--code-bg);
   border-radius: 0 4px 4px 0;
 }
-.content blockquote p:last-child { margin-bottom: 0; }
+.content blockquote p:last-child,
+.content blockquote ul:last-child,
+.content blockquote ol:last-child { margin-bottom: 0; }
 
 .content hr { border: none; border-top: 2px solid var(--border); margin: 2rem 0; }
 
