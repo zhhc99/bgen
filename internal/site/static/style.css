@@ -200,7 +200,7 @@ details.toc a:hover { color: var(--accent); }
 .content blockquote {
   border-left: 2px solid var(--accent);
   margin: 1.5rem 0;
-  padding: 0.4rem 0 0.4rem 1.4rem;
+  padding: 0.4rem 0.4rem 0.4rem 1.0rem;
   color: var(--text-2);
   background: var(--code-bg);
   border-radius: 0 4px 4px 0;
