@@ -290,4 +290,4 @@ body {
 
 - 模板使用 `html/template`, 不是 `text/template`. 输出 HTML 内容时用 `template.HTML` 类型的字段 (`.Content`, `.TOC`) 即可, bgen 已处理好转义.
 - 覆盖 `base.html` 时, 确保保留 `{{block "content" .}}` 占位, 否则所有页面内容都会消失.
-- 样式文件由 bgen 先写入内置 `style.css`, 再用用户的 `static/style.css` **覆盖整个文件** (不是追加合并). 若只想微调少数变量, 在用户 CSS 文件里重新声明 `:root` 变量即可, 其他规则从内置继承.
+- 样式文件由 bgen 先写入内置 `style.css`, 再用用户的 `static/style.css` **覆盖整个文件** (不是追加合并).
