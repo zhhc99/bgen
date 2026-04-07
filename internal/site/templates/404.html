@@ -2,5 +2,5 @@
 {{define "title"}}404 - {{.Site.Config.Title}}{{end}}
 {{define "content"}}
 <h1>404</h1>
-<p>Page not found. <a href="/">Go home.</a></p>
+<p>Page not found. <a href="{{.Site.Config.BasePath}}/">Go home.</a></p>
 {{end}}
