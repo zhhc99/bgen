@@ -24,14 +24,29 @@ type NavItem struct {
 	URL   string `yaml:"url"`
 }
 
+var defaultText = map[string]string{
+	"toc":                "Table of Contents",
+	"search-placeholder": "Search posts...",
+	"not-found":          "Page not found.",
+	"go-home":            "Go home.",
+	"copy":               "Copy",
+}
+
 type Config struct {
 	Title               string              `yaml:"title"`
 	BaseURL             string              `yaml:"base_url"`
 	BasePath            string              `yaml:"-"` // derived from BaseURL, e.g. "/~john"
 	Hero                HeroConfig          `yaml:"hero"`
 	Nav                 []NavItem           `yaml:"nav"`
-	L10n                map[string]string   `yaml:"l10n"`
+	TextOverride        map[string]string   `yaml:"text-override"`
 	FrontMatterDefaults FrontMatterDefaults `yaml:"front-matter-defaults"`
+}
+
+func (c *Config) Text(key string) string {
+	if value, ok := c.TextOverride[key]; ok {
+		return value
+	}
+	return defaultText[key]
 }
 
 func Load(projectRoot string) (*Config, error) {

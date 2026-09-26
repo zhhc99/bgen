@@ -13,7 +13,7 @@
   {{end}}
   {{if .Post.TOC}}
   <details class="toc">
-    <summary>{{index .Site.Config.L10n "toc"}}</summary>
+    <summary>{{.Site.Config.Text "toc"}}</summary>
     {{.Post.TOC}}
   </details>
   {{end}}

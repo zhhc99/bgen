@@ -126,11 +126,13 @@ html[data-theme="dark"] {
 .Site.Config.Nav            → []NavItem, 按配置顺序排列, 字段: Title / URL
 .Site.Config.NavTitle "/search/" → 对应导航名称, 未配置时为空
 .Site.Config.NavURL "/about/"    → 添加部署路径前缀, 外部链接保持原样
-.Site.Config.L10n           → map[string]string, 键: "toc"
+.Site.Config.Text "toc"     → 界面文案, 优先使用 text-override, 未配置时使用默认值
 .Site.Posts                 → []Post, 所有文章 (按时间倒序)
 .Site.Tags                  → map[string][]Post
 .Site.Pages                 → map[string]Page, 独立页面
 ```
+
+文案键: `toc`, `search-placeholder`, `not-found`, `go-home`, `copy`. 在模板中通过 `{{.Site.Config.Text "键名"}}` 读取.
 
 #### Post 字段
 

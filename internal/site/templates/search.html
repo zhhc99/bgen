@@ -2,7 +2,7 @@
 {{define "title"}}{{.Site.Config.NavTitle "/search/"}} - {{.Site.Config.Title}}{{end}}
 {{define "content"}}
 {{if .Site.Config.NavTitle "/search/"}}<h1>{{.Site.Config.NavTitle "/search/"}}</h1>{{end}}
-<input id="q" type="text" class="search-input" placeholder="Search posts..." autofocus>
+<input id="q" type="text" class="search-input" placeholder="{{.Site.Config.Text "search-placeholder"}}" autofocus>
 <ul id="results" class="post-list"></ul>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@7/dist/fuse.min.js"></script>
 <script>

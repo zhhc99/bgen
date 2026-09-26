@@ -87,16 +87,17 @@ nav:                          # 按顺序展示, 留空列表 [] 则无导航项
     url: /about/              # content/about.md
   - title: GitHub
     url: https://github.com/zhhc99
-l10n:
+text-override:                # 可选, 只填写需要覆盖的文案
   toc: Table of Contents
+  search-placeholder: Search posts...
+  not-found: Page not found.
+  go-home: Go home.
+  copy: Copy
 front-matter-defaults:        # markdown 元数据的默认值
   author: John
 ```
 
-导航只展示列出的链接. 站内链接从 `/` 开始, bgen 自动添加部署路径前缀; 外部链接直接填写完整 URL.
-列出 `/search/` 才生成搜索页和索引, 列出 `/tags/` 才生成标签页. 普通文章和独立页面的生成不受导航影响.
-
-**Markdown 元数据:**
+**文章元数据:**
 
 ```
 ---

@@ -2,6 +2,7 @@ package site
 
 import (
 	"encoding/xml"
+	"html"
 	"os"
 	"path/filepath"
 	"regexp"
@@ -109,7 +110,7 @@ func buildContent(p *Post, baseURL, postURL string) string {
 		return content
 	}
 	coverURL := absolutifyURLs(`src="`+p.Cover+`"`, baseURL, postURL)
-	cover := `<img ` + coverURL + ` alt="cover" style="max-width:100%"><br>` + "\n"
+	cover := `<img ` + coverURL + ` alt="` + html.EscapeString(p.Title) + `" style="max-width:100%"><br>` + "\n"
 	return cover + content
 }
 

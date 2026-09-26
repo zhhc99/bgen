@@ -137,7 +137,7 @@ func (s *Site) loadBundlePost(bundleDir string) (*Post, error) {
 }
 
 func (s *Site) buildPost(pf *content.ParsedFile, slug, coverSrc string) (*Post, error) {
-	result, err := pandoc.Convert(pf.Body)
+	result, err := pandoc.Convert(pf.Body, s.Config.Text("copy"))
 	if err != nil {
 		return nil, err
 	}
@@ -190,10 +190,7 @@ func (s *Site) loadPages(contentPath string) error {
 		if err != nil {
 			return fmt.Errorf("%s: %w", path, err)
 		}
-		if pf.Front.Ignore {
-			continue
-		}
-		result, err := pandoc.Convert(pf.Body)
+		result, err := pandoc.Convert(pf.Body, s.Config.Text("copy"))
 		if err != nil {
 			return err
 		}

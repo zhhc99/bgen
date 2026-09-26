@@ -2,6 +2,7 @@ package build_test
 
 import (
 	"bytes"
+	"html"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -268,7 +269,7 @@ func TestBuild_RemovesUnpublishedContent(t *testing.T) {
 			t.Fatal(err)
 		}
 	}
-	for _, rel := range []string{"posts/hello.md", "posts/bundle/index.md", "about.md"} {
+	for _, rel := range []string{"posts/hello.md", "posts/bundle/index.md"} {
 		path := filepath.Join(dir, "content", rel)
 		data, err := os.ReadFile(path)
 		if err != nil {
@@ -276,7 +277,7 @@ func TestBuild_RemovesUnpublishedContent(t *testing.T) {
 		}
 		mustWrite(t, path, strings.Replace(string(data), "---\n", "---\nignore: true\n", 1))
 	}
-	for _, rel := range []string{"content/posts/math.md", "static/removed.txt"} {
+	for _, rel := range []string{"content/posts/math.md", "content/about.md", "static/removed.txt"} {
 		if err := os.Remove(filepath.Join(dir, rel)); err != nil {
 			t.Fatal(err)
 		}
@@ -339,5 +340,61 @@ func TestBuild_FailurePreservesOutput(t *testing.T) {
 	leftovers, err := filepath.Glob(filepath.Join(dir, ".bgen-build-*"))
 	if err != nil || len(leftovers) != 0 {
 		t.Fatalf("temporary files remain: %v (%v)", leftovers, err)
+	}
+}
+
+func TestBuild_TextOverridesAndPageMetadata(t *testing.T) {
+	if _, err := exec.LookPath("pandoc"); err != nil {
+		t.Skip("pandoc not found in PATH")
+	}
+	for _, tc := range []struct {
+		name, config, toc, search, missing, home, copy string
+	}{
+		{"defaults", "", "Table of Contents", "Search posts...", "Page not found.", "Go home.", "Copy"},
+		{"partial", "text-override:\n  toc: 目录\n", "目录", "Search posts...", "Page not found.", "Go home.", "Copy"},
+		{"custom", `text-override:
+  toc: 本文目录
+  search-placeholder: '搜索 "文章" & <内容>'
+  not-found: 页面不存在.
+  go-home: 返回首页
+  copy: '复制 "代码" & <内容>'
+`, "本文目录", `搜索 "文章" & <内容>`, "页面不存在.", "返回首页", `复制 "代码" & <内容>`},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			dir := makeProject(t)
+			configPath := filepath.Join(dir, "blog.yaml")
+			data, err := os.ReadFile(configPath)
+			if err != nil {
+				t.Fatal(err)
+			}
+			mustWrite(t, configPath, string(data)+tc.config)
+			body := "\n# Heading\n\n```\nexample\n```\n"
+			mustWrite(t, filepath.Join(dir, "content/posts/hello.md"), "---\ntitle: Hello World\ndate: 2024-01-01\n---\n"+body)
+			mustWrite(t, filepath.Join(dir, "content/about.md"), "---\ntitle: About\nignore: true\nslug: different\nauthor: Unused\nsummary: Unused\ntags: [unused]\ndate: 2024-01-01\n---\n"+body)
+			out := filepath.Join(dir, "output")
+			if err := build.Run(dir, out); err != nil {
+				t.Fatal(err)
+			}
+			copyAttr := `aria-label="` + html.EscapeString(tc.copy) + `"`
+			for rel, fragments := range map[string][]string{
+				"posts/hello/index.html": {"<summary>" + tc.toc + "</summary>", copyAttr},
+				"about/index.html":       {"<h1>About</h1>", copyAttr},
+				"search/index.html":      {`placeholder="` + html.EscapeString(tc.search) + `"`},
+				"404.html":               {tc.missing, ">" + tc.home + "</a>"},
+			} {
+				data, err := os.ReadFile(filepath.Join(out, rel))
+				if err != nil {
+					t.Fatal(err)
+				}
+				for _, fragment := range fragments {
+					if !strings.Contains(string(data), fragment) {
+						t.Errorf("%s missing %q", rel, fragment)
+					}
+				}
+			}
+			if _, err := os.Stat(filepath.Join(out, "different")); !os.IsNotExist(err) {
+				t.Fatalf("page slug changed its path: %v", err)
+			}
+		})
 	}
 }

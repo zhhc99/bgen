@@ -63,7 +63,7 @@ nav:
     url: /tags/
   - title: About
     url: /about/
-l10n:
+text-override:
   toc: Table of Contents
 front-matter-defaults:
   author: Alice
