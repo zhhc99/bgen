@@ -290,6 +290,14 @@ details.toc a:hover { color: var(--accent); }
 .tag-list a:hover { color: var(--accent); }
 
 /* ── 搜索 ── */
+.search-result {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  align-items: baseline;
+  gap: 0.75rem;
+}
+.search-result a { overflow-wrap: anywhere; }
+
 .search-input {
   width: 100%;
   padding: 0.7rem 1rem;

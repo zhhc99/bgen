@@ -57,8 +57,12 @@ hero:
   header: Alice
   content: Welcome to my blog!
 nav:
-  search: search
-  tags: tags
+  - title: search
+    url: /search/
+  - title: tags
+    url: /tags/
+  - title: About
+    url: /about/
 l10n:
   toc: Table of Contents
 front-matter-defaults:

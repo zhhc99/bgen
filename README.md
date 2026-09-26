@@ -4,9 +4,9 @@
 [![Go Version](https://img.shields.io/github/go-mod/go-version/zhhc99/bgen)](https://github.com/zhhc99/bgen)
 [![Latest Release](https://img.shields.io/github/v/release/zhhc99/bgen)](https://github.com/zhhc99/bgen/releases)
 
-**bgen / BlogGEN 是一个静态博客站点生成器.**
+**轻量配置 & 保持自由.**
 
-核心想法: 把时间花在用 Markdown 书写博文, 而不是做各种配置上.
+bgen / BlogGen 是一个静态博客站点生成器.
 
 ## 🛠 功能
 
@@ -23,7 +23,7 @@
 
 ## 📦 快速安装
 
-**依赖:** [Pandoc](https://pandoc.org/installing.html) (用于 Markdown 解析)
+**依赖:** [Pandoc](https://pandoc.org/installing.html) 用于 Markdown 解析.
 
 建议使用 `go install`:
 
@@ -78,24 +78,34 @@ base_url: https://example.com # 站点根域名
 hero:                         # 首页顶部展示区
   header: John
   content: This is my blog!
-nav:                          # 导航栏项目的名称. 填 "" 删去对应项
-  search: search
-  tags: tags
+nav:                          # 按顺序展示, 留空列表 [] 则无导航项
+  - title: Search
+    url: /search/             # 自动生成
+  - title: Tags
+    url: /tags/               # 自动生成
+  - title: About
+    url: /about/              # content/about.md
+  - title: GitHub
+    url: https://github.com/zhhc99
 l10n:
   toc: Table of Contents
 front-matter-defaults:        # markdown 元数据的默认值
   author: John
 ```
 
-**Markdown 前置元数据:**
+导航只展示列出的链接. 站内链接从 `/` 开始, bgen 自动添加部署路径前缀; 外部链接直接填写完整 URL.
+列出 `/search/` 才生成搜索页和索引, 列出 `/tags/` 才生成标签页. 普通文章和独立页面的生成不受导航影响.
+
+**Markdown 元数据:**
 
 ```
 ---
 title: Hello World
 date: 2024-01-01
 tags: [tech, life]
+ignore: false                     # 默认 false. 设置为 true 则忽略该文
 slug: slug-to-this-post           # 默认为文件名
-summary: this post has nothing... # 默认从文章截取
+summary: people in the world...   # 默认从文章截取
 author: Alice                     # 若不填写, 由 blog.yaml 覆盖
 ---
 
@@ -120,7 +130,7 @@ A: 见仓库 `internal/site/templates`, 默认内容非常简单. 例如, `layou
 
 **Q: 如何添加导航页面?**
 
-A: 在 `content/` 下直接创建的 markdown 会被 bgen 理解成可导航的单独页面.
+A: 在 `content/` 下直接创建 markdown, 如 `about.md` 对应 `/about/`. 然后在 `nav` 中添加链接.
 
 **Q: 封面图怎么添加?**
 
@@ -151,10 +161,6 @@ git push origin vX.Y.Z
 
 ## 🎯 想法
 
-**写博客应该是在写作, 不是在配置工具.**
+现有工具 (Hugo, Jekyll 等) 配置项太重, 基本功能 (如 TeX) 做不好, 每个主题还有细微区别. 这给我带来了困扰. bgen 是我对此交出的答卷.
 
-现有工具 (Hugo, Jekyll 等) 配置项太重, 基本功能 (如 TeX) 做不好, 每个主题还有细微区别. 这给我带来了困扰.
-
-bgen 是我对此交出的答卷.
-
-我弄了一个工具 [hugo2bgen](https://github.com/zhhc99/hugo2bgen/) 用来从 hugo 快速迁移. 工具可以处理 frontmatter 的字段并迁移封面图, 不修改原始文件.
+工具 [hugo2bgen](https://github.com/zhhc99/hugo2bgen/) 可以帮助从 hugo 快速迁移.

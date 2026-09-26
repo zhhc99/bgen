@@ -19,9 +19,9 @@ bgen 是一个用 Go 写的极简静态博客生成器. 目标用户是追求简
 2. 每篇文章用 Pandoc 处理: markdown -> HTML, 处理 TeX, 图注, 代码块
 3. Pandoc 同时生成 TOC
 4. 将 HTML 内容注入 Go html/template 模板
-5. 输出静态文件到 output/
-6. 特殊页面不是文章, 添加到导航
-7. 构建时生成 search.json (标题 + URL + 日期)
+5. 在临时目录生成静态文件, 成功后替换 output/, 清除旧文件
+6. 独立页面照常生成, 导航按 nav 列表展示
+7. nav 包含 /search/ 时生成搜索页和 search.json (标题 + URL + 日期)
 8. dev 模式: 本地 HTTP server + 文件监听自动重建
 
 ## 生成的页面
@@ -35,7 +35,9 @@ bgen 是一个用 Go 写的极简静态博客生成器. 目标用户是追求简
 | 特殊页面 | `/about/`, `/links/` | 纯内容, 无列表逻辑     |
 | 404      | `/404.html`          | 错误反馈页             |
 
-导航栏固定: Search | Tags | 各种特殊页面
+导航由 nav 中的 title 和 url 按顺序组成, 支持站内和外部链接. nav 包含 /tags/ 时生成标签索引和标签列表页.
+
+文章和独立页面均支持 ignore: true, 跳过生成. 输出目录由 bgen 管理, 构建失败保留上次结果. 输出路径不能覆盖项目或源文件.
 
 ## 技术栈
 

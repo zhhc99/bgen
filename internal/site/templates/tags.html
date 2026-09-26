@@ -1,7 +1,7 @@
 {{template "base.html" .}}
-{{define "title"}}{{index .Site.Config.Nav "tags"}} - {{.Site.Config.Title}}{{end}}
+{{define "title"}}{{.Site.Config.NavTitle "/tags/"}} - {{.Site.Config.Title}}{{end}}
 {{define "content"}}
-{{if index .Site.Config.Nav "tags"}}<h1>{{index .Site.Config.Nav "tags"}}</h1>{{end}}
+{{if .Site.Config.NavTitle "/tags/"}}<h1>{{.Site.Config.NavTitle "/tags/"}}</h1>{{end}}
 <ul class="tag-list">
   {{range $tag, $posts := .Site.Tags}}
   <li><a href="{{$.Site.Config.BasePath}}/tags/{{$tag}}/">#{{$tag}}</a> ({{len $posts}})</li>

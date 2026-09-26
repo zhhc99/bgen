@@ -17,8 +17,8 @@ type searchItem struct {
 }
 
 func (s *Site) render(projectRoot, outPath string) error {
-	searchEnabled := s.Config.Nav["search"] != ""
-	tagsEnabled := s.Config.Nav["tags"] != ""
+	searchEnabled := s.Config.NavTitle("/search/") != ""
+	tagsEnabled := s.Config.NavTitle("/tags/") != ""
 
 	// 预加载模板
 	coreTemplates := []string{"index", "404", "single", "page"}

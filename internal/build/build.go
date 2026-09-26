@@ -12,8 +12,7 @@ func Run(projectRoot, outDir string) error {
 	if err != nil {
 		return fmt.Errorf("loading config: %w", err)
 	}
-	s := site.New(cfg)
-	if err := s.Build(projectRoot, outDir); err != nil {
+	if err := buildOutput(projectRoot, outDir, site.New(cfg)); err != nil {
 		return fmt.Errorf("building site: %w", err)
 	}
 	fmt.Printf("build complete -> %s\n", outDir)
@@ -26,8 +25,7 @@ func RunDev(projectRoot, outDir string) error {
 		return fmt.Errorf("loading config: %w", err)
 	}
 	cfg.BasePath = ""
-	s := site.New(cfg)
-	if err := s.Build(projectRoot, outDir); err != nil {
+	if err := buildOutput(projectRoot, outDir, site.New(cfg)); err != nil {
 		return fmt.Errorf("building site: %w", err)
 	}
 	return nil

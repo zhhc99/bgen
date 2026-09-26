@@ -190,6 +190,9 @@ func (s *Site) loadPages(contentPath string) error {
 		if err != nil {
 			return fmt.Errorf("%s: %w", path, err)
 		}
+		if pf.Front.Ignore {
+			continue
+		}
 		result, err := pandoc.Convert(pf.Body)
 		if err != nil {
 			return err

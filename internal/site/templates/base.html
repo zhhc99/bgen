@@ -35,9 +35,7 @@
     <nav>
       <a href="{{.Site.Config.BasePath}}/" class="site-title">{{.Site.Config.Title}}</a>
       <span class="nav-links">
-        {{if index .Site.Config.Nav "search"}}<a href="{{.Site.Config.BasePath}}/search/">{{index .Site.Config.Nav "search"}}</a>{{end}}
-        {{if index .Site.Config.Nav "tags"}}<a href="{{.Site.Config.BasePath}}/tags/">{{index .Site.Config.Nav "tags"}}</a>{{end}}
-        {{range $slug, $p := .Site.Pages}}<a href="{{$.Site.Config.BasePath}}{{$p.URL}}">{{$p.Title}}</a>{{end}}
+        {{range .Site.Config.Nav}}<a href="{{$.Site.Config.NavURL .URL}}">{{.Title}}</a>{{end}}
       </span>
     </nav>
   </header>

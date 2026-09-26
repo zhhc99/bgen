@@ -123,7 +123,9 @@ html[data-theme="dark"] {
 .Site.Config.BasePath       → URL 路径前缀, 通常为 "" 或 "/~john"
 .Site.Config.Hero.Header    → 首页 hero 标题
 .Site.Config.Hero.Content   → 首页 hero 副文本
-.Site.Config.Nav            → map[string]string, 键: "search" / "tags"
+.Site.Config.Nav            → []NavItem, 按配置顺序排列, 字段: Title / URL
+.Site.Config.NavTitle "/search/" → 对应导航名称, 未配置时为空
+.Site.Config.NavURL "/about/"    → 添加部署路径前缀, 外部链接保持原样
 .Site.Config.L10n           → map[string]string, 键: "toc"
 .Site.Posts                 → []Post, 所有文章 (按时间倒序)
 .Site.Tags                  → map[string][]Post
@@ -236,9 +238,7 @@ html[data-theme="dark"] {
   <aside class="sidebar">
     <a href="{{.Site.Config.BasePath}}/" class="site-title">{{.Site.Config.Title}}</a>
     <nav>
-      {{if index .Site.Config.Nav "search"}}<a href="{{.Site.Config.BasePath}}/search/">{{index .Site.Config.Nav "search"}}</a>{{end}}
-      {{if index .Site.Config.Nav "tags"}}<a href="{{.Site.Config.BasePath}}/tags/">{{index .Site.Config.Nav "tags"}}</a>{{end}}
-      {{range $slug, $p := .Site.Pages}}<a href="{{$.Site.Config.BasePath}}{{$p.URL}}">{{$p.Title}}</a>{{end}}
+      {{range .Site.Config.Nav}}<a href="{{$.Site.Config.NavURL .URL}}">{{.Title}}</a>{{end}}
     </nav>
   </aside>
   <main>{{block "content" .}}{{end}}</main>
