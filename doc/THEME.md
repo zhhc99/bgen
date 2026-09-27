@@ -54,8 +54,8 @@ your-blog/
   --radius:   0.75rem;   /* 圆角 */
 
   /* 字体 */
-  --font:  system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  --mono:  ui-monospace, "Cascadia Code", "Fira Code", monospace;
+  --font:  system-ui, sans-serif;
+  --mono:  ui-monospace, monospace;
 }
 
 /* Dark Mode */
