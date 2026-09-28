@@ -73,10 +73,8 @@ const aboutMD = `---
 title: About
 ---
 
-Hi! This blog is powered by [bgen](https://github.com/zhhc99/bgen),
-a static blog generator built with minimal cognitive load in mind.
-
-No complex configuration, no theme jungle — just write Markdown and ship.
+This blog is built with [bgen](https://github.com/zhhc99/bgen),
+a static blog generator for Markdown posts.
 `
 
 const myPostMD = `---
@@ -85,7 +83,7 @@ date: 2024-01-01
 tags: [hello, markdown]
 ---
 
-Welcome to bgen! Write your posts in Markdown right here.
+Write your posts in Markdown. Here are a few examples.
 
 ## Code
 
@@ -108,15 +106,16 @@ $$
 
 ## Images with captions
 
-bgen uses Pandoc, so image captions just work:
+Pandoc uses the image description as its caption:
 
 ![This text becomes a figure caption](https://picsum.photos/500)
 
 ## What's next?
 
 - To add a cover image, place a same-named image file next to this post (e.g. ` + "`my-post.jpg`" + `).
-- To customize the theme, edit ` + "`static/style.css`" + ` or templates under ` + "`layouts/`" + `.
-- You can download templates of style sheets / layout files from the GitHub repo below.
+- Add style changes to ` + "`static/custom.css`" + `. The default layout loads it after the theme styles; CSS cascade rules apply.
+- To replace the entire stylesheet, provide ` + "`static/style.css`" + `. To change the layout, add templates under ` + "`layouts/`" + `.
+- You can download the full stylesheet and layout templates from the GitHub repo below. If you replace ` + "`layouts/base.html`" + `, keep its conditional link to ` + "`custom.css`" + `.
 - See https://github.com/zhhc99/bgen for full documentation.
 `
 

@@ -1,7 +1,6 @@
 # TODO: SEO
 
-bgen 的设计哲学是约定优于配置, 因此 SEO 相关信息应尽量从已有数据自动推断,
-不引入新的必填配置项.
+bgen 从已有数据生成 SEO 信息, 新增配置项均为可选.
 
 ---
 
@@ -10,7 +9,6 @@ bgen 的设计哲学是约定优于配置, 因此 SEO 相关信息应尽量从�
 ### sitemap.xml
 
 构建时自动生成, 列出所有文章和页面的 URL 及最后修改时间.
-无需用户配置.
 
 ### robots.txt
 
@@ -51,13 +49,13 @@ lang: zh  # 默认 zh
 <link rel="canonical" href="<base_url><page_url>">
 ```
 
-防止重复内容问题, 每个页面都应有.
+每个页面声明规范 URL, 帮助搜索引擎识别重复内容.
 
 ---
 
 ## 分享预览 (Open Graph / Twitter Card)
 
-分享到社交平台时决定展示效果, 统一处理.
+为社交平台提供分享预览信息:
 
 ```html
 <meta property="og:title"       content="...">
@@ -72,11 +70,11 @@ lang: zh  # 默认 zh
 <meta name="twitter:image"       content="...">     <!-- 封面图, 无则省略 -->
 ```
 
-数据来源与 description 一致, 不引入额外配置.
+复用页面标题, description, URL 和封面数据.
 
 ---
 
 ## 暂不做
 
-- JSON-LD / schema.org: 收益有限, 实现较繁琐, 与简洁哲学不符.
-- `<meta name="author">`: 意义不大, 暂跳过.
+- JSON-LD / schema.org
+- `<meta name="author">`

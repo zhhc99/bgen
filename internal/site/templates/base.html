@@ -9,6 +9,7 @@
   <link rel="stylesheet" href="{{.Site.Config.BasePath}}/style.css">
   <link rel="alternate" type="application/rss+xml" title="{{.Site.Config.Title}}" href="{{.Site.Config.BasePath}}/feed.xml">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+  {{if .Site.HasCustomCSS}}<link rel="stylesheet" href="{{.Site.Config.BasePath}}/custom.css">{{end}}
   <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" defer></script>
   <script defer>document.addEventListener('DOMContentLoaded', function(){ hljs.highlightAll(); });</script>
   <script>

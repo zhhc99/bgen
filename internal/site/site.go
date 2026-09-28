@@ -35,6 +35,7 @@ type Site struct {
 	Posts         []Post
 	Tags          map[string][]Post
 	Pages         map[string]Page
+	HasCustomCSS  bool // 项目提供了 static/custom.css, 在主题样式之后加载
 	templateCache map[string]*template.Template
 }
 

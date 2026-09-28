@@ -1,9 +1,8 @@
 # bgen 主题编写指南
 
-bgen 的主题由两部分构成: **样式** (`style.css`) 和**布局** (`layouts/`).
-两者均可独立覆盖, 也可组合使用. 找不到用户文件时, bgen 回退到内置默认值.
+bgen 的主题包含**样式** (`style.css`) 和**布局** (`layouts/`), 均可独立替换. 缺少用户文件时使用内置版本. `custom.css` 用于增量调整样式.
 
-> 这篇文档由 AI 生成, 仅供辅助阅读, 项目开发者不对此负责. 制作主题时, 最快的上手方式是直接从 `internal/site/templates` 和 `internal/site/static` 开始修改. 辛苦了~
+> 本文由 AI 生成, 仅供参考, 项目开发者不对内容负责. 内置布局和样式见 `internal/site/templates` 和 `internal/site/static`.
 
 ---
 
@@ -12,7 +11,8 @@ bgen 的主题由两部分构成: **样式** (`style.css`) 和**布局** (`layou
 ```
 your-blog/
 ├── static/
-│   └── style.css        # 覆盖全局样式
+│   ├── style.css        # (可选) 完全替换内置样式
+│   └── custom.css       # (可选) 增量补充和覆盖当前主题样式
 └── layouts/
     ├── base.html        # 页面骨架 (导航 / head / 脚本)
     ├── index.html       # 首页文章列表
@@ -24,15 +24,29 @@ your-blog/
     └── 404.html         # 404 页
 ```
 
-只需放置你想覆盖的文件, 其余继续使用内置模板. 你的文件会**完全替换**内置模板.
+按需创建以上文件. `static/style.css` 和 `layouts/` 下的同名文件会完全替换内置文件; `static/custom.css` 只需包含样式改动.
 
 ---
 
-## 样式覆盖 (`static/style.css`)
+## 样式覆盖 (`static/custom.css` / `static/style.css`)
 
-内置样式通过 CSS 自定义属性 (变量) 管理视觉 token, 覆盖它们是最快的主题方式.
+日常调整可直接写入 `static/custom.css`. 例如:
 
-内置样式采用系统默认字体和 Anthropic 风格的基础配色.
+```css
+/* static/custom.css */
+:root {
+  --accent: #387b67;
+  --max-w: 50rem;
+}
+```
+
+默认布局仅在 `static/custom.css` 存在时引用它, 加载顺序为 `style.css`, highlight.js 高亮样式, `custom.css`. 两个本地 CSS 文件分别输出到站点根目录, 引用自动带上 `BasePath` 前缀.
+
+覆盖遵循 CSS 层叠规则: 同优先级时, 后加载的声明生效; 选择器权重和 `!important` 仍然有效. 修改深色模式变量时, 可沿用内置的 `html[data-theme="dark"]` 选择器.
+
+完整替换样式时, 使用 `static/style.css`, 也可继续用 `static/custom.css` 调整. 自定义 `layouts/base.html` 时, 需保留 `custom.css` 的条件引用, 见下方示例.
+
+内置样式采用系统字体和 Anthropic 风格配色, 通过 CSS 变量设置颜色, 字体和尺寸.
 
 ### 内置变量
 
@@ -98,7 +112,7 @@ html[data-theme="dark"] {
 
 ### 模板继承机制
 
-所有页面模板都继承 `base.html`. 固定模式如下:
+页面模板通过 `base.html` 组织布局, 例如:
 
 ```html
 <!-- layouts/single.html -->
@@ -110,6 +124,7 @@ html[data-theme="dark"] {
 ```
 
 `base.html` 提供两个 block:
+
 - `title` — `<title>` 标签内容, 有默认值
 - `content` — `<main>` 内的主体内容, **必须定义**
 
@@ -130,6 +145,7 @@ html[data-theme="dark"] {
 .Site.Posts                 → []Post, 所有文章 (按时间倒序)
 .Site.Tags                  → map[string][]Post
 .Site.Pages                 → map[string]Page, 独立页面
+.Site.HasCustomCSS          → bool, 项目是否提供 static/custom.css
 ```
 
 文案键: `toc`, `search-placeholder`, `not-found`, `go-home`, `copy`. 在模板中通过 `{{.Site.Config.Text "键名"}}` 读取.
@@ -171,6 +187,8 @@ html[data-theme="dark"] {
 
 ```html
 <link rel="stylesheet" href="{{.Site.Config.BasePath}}/style.css">
+<!-- 如果加载了代码高亮等样式, 将它们放在 custom.css 之前 -->
+{{if .Site.HasCustomCSS}}<link rel="stylesheet" href="{{.Site.Config.BasePath}}/custom.css">{{end}}
 ```
 
 ### 各模板的上下文
@@ -185,9 +203,9 @@ html[data-theme="dark"] {
 | `search.html` | 仅 `.Site` |
 | `404.html` | 仅 `.Site` |
 
-### 内置行为: 不要改掉它们
+### 布局中的功能片段
 
-`base.html` 包含两段逻辑, 覆盖时请保留:
+自定义 `base.html` 时, 保留以下片段以支持对应功能:
 
 **Live reload** (dev server 用, 生产环境自动跳过):
 ```html
@@ -211,11 +229,11 @@ html[data-theme="dark"] {
 
 ---
 
-## 完整示例: 极简双栏布局
+## 示例: 双栏布局
 
-以下示例将首页改为左侧固定导航 + 右侧文章流的双栏布局.
+以下示例使用左侧导航和右侧内容的双栏布局.
 
-**`layouts/base.html`** — 只改结构, 保留必要脚本:
+**`layouts/base.html`**:
 
 ```html
 <!DOCTYPE html>
@@ -231,6 +249,7 @@ html[data-theme="dark"] {
         href="{{.Site.Config.BasePath}}/feed.xml">
   <link rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+  {{if .Site.HasCustomCSS}}<link rel="stylesheet" href="{{.Site.Config.BasePath}}/custom.css">{{end}}
   <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" defer></script>
   <script defer>document.addEventListener('DOMContentLoaded', function(){ hljs.highlightAll(); });</script>
   <script>window.MathJax = { tex: { inlineMath: [['\\(','\\)']], displayMath: [['\\[','\\]']] } };</script>
@@ -255,7 +274,7 @@ html[data-theme="dark"] {
 </html>
 ```
 
-**`static/style.css`** — 追加双栏布局, 其余继承内置:
+**`static/custom.css`**: 在内置样式上添加双栏布局.
 
 ```css
 body {
@@ -290,8 +309,6 @@ body {
 
 ---
 
-## 注意事项
+## 模板中的 HTML 内容
 
-- 模板使用 `html/template`, 不是 `text/template`. 输出 HTML 内容时用 `template.HTML` 类型的字段 (`.Content`, `.TOC`) 即可, bgen 已处理好转义.
-- 覆盖 `base.html` 时, 确保保留 `{{block "content" .}}` 占位, 否则所有页面内容都会消失.
-- 样式文件由 bgen 先写入内置 `style.css`, 再用用户的 `static/style.css` **覆盖整个文件** (不是追加合并).
+`html/template` 自动转义普通文本. `.Content` 和 `.TOC` 的类型为 `template.HTML`, 可直接输出转换后的 HTML. `base.html` 通过 `{{block "content" .}}{{end}}` 插入页面主体, 自定义布局时需保留此占位.

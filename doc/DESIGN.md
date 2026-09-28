@@ -1,6 +1,6 @@
 # bgen 设计文档
 
-bgen 是一个用 Go 写的极简静态博客生成器. 目标用户是追求简洁, 有一定技术能力, 想要完全理解自己工具的写作者.
+bgen 是一个用 Go 写的极简静态博客生成器, 面向有一定技术基础, 希望理解所用工具的写作者.
 
 ## 用户维护的文件
 
@@ -8,10 +8,9 @@ bgen 是一个用 Go 写的极简静态博客生成器. 目标用户是追求简
 
 ## 编码格式原则
 
-- 代码自述, 尽量避免注释.
-- 当代码无法自述时, 用中文写简洁注释.
-- 任何时候都不允许使用中文标点. 只能使用英文标点.
-- 在规范的前提下, 尽量用最简短的代码实现功能.
+- 优先用清晰的代码表达意图, 必要时补充简短的中文注释.
+- 统一使用英文标点.
+- 遵守规范, 保持代码简洁.
 
 ## bgen 做的事
 
@@ -49,8 +48,8 @@ bgen 是一个用 Go 写的极简静态博客生成器. 目标用户是追求简
 - YAML 解析: `gopkg.in/yaml.v3`
 - 文件监听: `github.com/fsnotify/fsnotify`
 - Dev server: `net/http`, `github.com/coder/websocket`
-- 前端搜索: Fuse.js (CDN), 消费 search.json
-- 依赖极少, 编译为单一二进制
+- 前端搜索: Fuse.js (CDN), 读取 search.json
+- 编译为单一二进制
 
 ## 命令行
 
@@ -67,18 +66,24 @@ bgen help
 默认模板和样式内置在二进制里 (embed). 用户在项目根目录放同名文件即可覆盖:
 
 - `layouts/single.html` 覆盖文章页模板
-- `static/style.css` 覆盖样式
+- `static/style.css` 完全替换内置样式
 
-默认样式应是真正好看的, 干净的, 不是 placeholder. 用户不覆盖也能直接用.
+`static/custom.css` 用于增量补充和覆盖当前主题. 构建时通过 `Site.HasCustomCSS` 告知模板该文件是否存在. 默认布局在文件存在时加载它, 放在 `style.css` 和代码高亮样式之后, URL 带上 `BasePath` 前缀.
+
+静态文件原样复制, 浏览器按 CSS 层叠规则处理覆盖. 同优先级时后加载的声明生效, 选择器权重和 `!important` 仍然有效.
+
+自定义 `layouts/base.html` 时, 需保留 `custom.css` 的条件引用.
+
+默认样式应简洁美观, 可直接用于发布.
 
 ## 计划做的事
 
-- pandoc parse 应该用 errgroup
-- `extractImageRefs` 也支持内嵌 html, 如 `<img src="...">`
-- 用 bgen 生成的 example & usage site
+- 用 errgroup 并行处理 Pandoc 转换
+- 让 `extractImageRefs` 支持内嵌 HTML, 如 `<img src="...">`
+- 用 bgen 生成示例和使用指南站点
 
 ## 不做的事
 
-- 文章的 l10n (责任不在写作者)
-- 复杂 taxonomy (只有 tags, 没有 categories)
-- 任何需要文档才能理解的配置项
+- 文章本地化 (l10n)
+- tags 以外的分类体系
+- 需要查阅文档才能理解的配置项

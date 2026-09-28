@@ -121,7 +121,7 @@ author: Alice                     # 若不填写, 由 blog.yaml 覆盖
 
 A: 主题由 style (外观) 和 layout (布局) 构成.
 
-- style: 位于 `static/style.css`, 找不到时回退到内置模板.
+- style: 位于 `static/style.css`, 找不到时回退到内置模板. 此外, 可以用 `static/custom.css` 对 `static/style.css` 做补充. 产生冲突时, `custom.css` 的优先级高于 `style.css`.
 - layout: 位于 `layouts/`, 找不到时回退到内置模板.
 - 更多信息见 [THEME.md](./doc/THEME.md)
 

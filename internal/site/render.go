@@ -17,6 +17,12 @@ type searchItem struct {
 }
 
 func (s *Site) render(projectRoot, outPath string) error {
+	customCSS, err := os.Stat(filepath.Join(projectRoot, "static", "custom.css"))
+	if err != nil && !os.IsNotExist(err) {
+		return fmt.Errorf("checking custom.css: %w", err)
+	}
+	s.HasCustomCSS = err == nil && customCSS.Mode().IsRegular()
+
 	searchEnabled := s.Config.NavTitle("/search/") != ""
 	tagsEnabled := s.Config.NavTitle("/tags/") != ""
 
