@@ -155,6 +155,17 @@ article h1 {
   display: block;
 }
 
+.cover-figure { margin: 0 0 1.75rem; }
+.cover-figure .featured-image { margin-bottom: 0; }
+.cover-figure figcaption {
+  padding: 0.6rem 0.25rem 0;
+  color: var(--text-2);
+  font-size: 0.8rem;
+  line-height: 1.6;
+  text-align: center;
+  text-wrap: pretty;
+}
+
 /* ── 目录 ── */
 details.toc {
   font-size: 0.88rem;

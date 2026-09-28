@@ -9,13 +9,14 @@ import (
 )
 
 type FrontMatter struct {
-	Title   string    `yaml:"title"`
-	Date    time.Time `yaml:"date"`
-	Tags    []string  `yaml:"tags"`
-	Slug    string    `yaml:"slug"`
-	Author  string    `yaml:"author"`
-	Summary string    `yaml:"summary"`
-	Ignore  bool      `yaml:"ignore"`
+	Title        string    `yaml:"title"`
+	Date         time.Time `yaml:"date"`
+	Tags         []string  `yaml:"tags"`
+	Slug         string    `yaml:"slug"`
+	Author       string    `yaml:"author"`
+	Summary      string    `yaml:"summary"`
+	CoverCaption string    `yaml:"cover_caption"`
+	Ignore       bool      `yaml:"ignore"`
 }
 
 type ParsedFile struct {

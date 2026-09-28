@@ -138,6 +138,76 @@ func TestBuild_PostContent(t *testing.T) {
 	}
 }
 
+func TestBuild_CoverCaption(t *testing.T) {
+	if _, err := exec.LookPath("pandoc"); err != nil {
+		t.Skip("pandoc not found in PATH")
+	}
+	for _, tc := range []struct {
+		name    string
+		bundle  bool
+		cover   bool
+		caption string
+	}{
+		{"flat", false, true, `天空 "清晨" & <云朵>`},
+		{"bundle", true, true, `天空 "清晨" & <云朵>`},
+		{"without caption", false, true, ""},
+		{"without cover", false, false, "无封面的图注"},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			dir := makeProject(t)
+			mustWrite(t, filepath.Join(dir, "blog.yaml"), "title: Test\nbase_url: https://example.com/~alice\nnav: []\n")
+			postPath, coverPath := "content/posts/hello.md", "content/posts/hello.png"
+			if tc.bundle {
+				if err := os.Remove(filepath.Join(dir, postPath)); err != nil {
+					t.Fatal(err)
+				}
+				postPath, coverPath = "content/posts/hello/index.md", "content/posts/hello/cover.png"
+			}
+			mustWrite(t, filepath.Join(dir, postPath), "---\ntitle: Hello\ncover_caption: '"+tc.caption+"'\n---\n\n正文内容.\n\n## Heading\n")
+			if tc.cover {
+				mustWrite(t, filepath.Join(dir, coverPath), "cover")
+			}
+			out := filepath.Join(dir, "output")
+			if err := build.Run(dir, out); err != nil {
+				t.Fatal(err)
+			}
+			wantCaption := tc.cover && tc.caption != ""
+			for _, rel := range []string{"posts/hello/index.html", "feed.xml"} {
+				data, err := os.ReadFile(filepath.Join(out, rel))
+				if err != nil {
+					t.Fatal(err)
+				}
+				output := string(data)
+				if strings.Contains(output, "<figcaption>") != wantCaption {
+					t.Errorf("%s: unexpected caption visibility", rel)
+				}
+				if wantCaption && !strings.Contains(output, "<figcaption>"+html.EscapeString(tc.caption)+"</figcaption>") {
+					t.Errorf("%s: missing escaped caption", rel)
+				}
+				if tc.cover {
+					coverURL := "/~alice/posts/hello/cover.png"
+					if rel == "feed.xml" {
+						coverURL = "https://example.com" + coverURL
+					}
+					if !strings.Contains(output, `src="`+coverURL+`"`) {
+						t.Errorf("%s: missing cover URL", rel)
+					}
+				}
+				if rel != "feed.xml" && wantCaption && strings.Index(output, "</figure>") > strings.Index(output, `<details class="toc">`) {
+					t.Error("cover caption follows the table of contents")
+				}
+			}
+			index, err := os.ReadFile(filepath.Join(out, "index.html"))
+			if err != nil {
+				t.Fatal(err)
+			}
+			if tc.caption != "" && strings.Contains(string(index), html.EscapeString(tc.caption)) {
+				t.Error("cover caption appears in the post list or summary")
+			}
+		})
+	}
+}
+
 func TestBuild_MissingConfig(t *testing.T) {
 	dir := t.TempDir() // 空目录, 没有 blog.yaml
 

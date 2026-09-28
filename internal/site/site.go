@@ -16,7 +16,8 @@ type Post struct {
 	URL          string
 	Summary      string
 	Author       string
-	Cover        string            // 生成后的 URL 路径, 空表示无封面
+	Cover        string // 生成后的 URL 路径, 空表示无封面
+	CoverCaption string
 	CoverSrc     string            // 构建期使用的源文件绝对路径
 	BundleImages map[string]string // markdown 中引用的图片: 相对路径 -> 绝对路径
 	Content      template.HTML

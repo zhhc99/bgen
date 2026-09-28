@@ -15,6 +15,7 @@ date: 2024-01-15
 tags: [go, blog]
 slug: my-slug
 author: alice
+cover_caption: '天空 & <云朵>'
 ---
 
 正文内容.
@@ -39,6 +40,9 @@ author: alice
 		}
 		if pf.Front.Author != "alice" {
 			t.Errorf("author: got %q, want %q", pf.Front.Author, "alice")
+		}
+		if pf.Front.CoverCaption != "天空 & <云朵>" {
+			t.Errorf("cover caption: got %q", pf.Front.CoverCaption)
 		}
 		if string(pf.Body) != "正文内容." {
 			t.Errorf("body: got %q", string(pf.Body))

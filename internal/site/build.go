@@ -158,17 +158,18 @@ func (s *Site) buildPost(pf *content.ParsedFile, slug, coverSrc string) (*Post, 
 	}
 
 	return &Post{
-		Title:    pf.Front.Title,
-		Date:     pf.Front.Date,
-		Tags:     pf.Front.Tags,
-		Slug:     slug,
-		URL:      "/posts/" + slug + "/",
-		Summary:  summary,
-		Author:   author,
-		Cover:    coverURL,
-		CoverSrc: coverSrc,
-		Content:  template.HTML(result.Body),
-		TOC:      template.HTML(result.TOC),
+		Title:        pf.Front.Title,
+		Date:         pf.Front.Date,
+		Tags:         pf.Front.Tags,
+		Slug:         slug,
+		URL:          "/posts/" + slug + "/",
+		Summary:      summary,
+		Author:       author,
+		Cover:        coverURL,
+		CoverCaption: pf.Front.CoverCaption,
+		CoverSrc:     coverSrc,
+		Content:      template.HTML(result.Body),
+		TOC:          template.HTML(result.TOC),
 	}, nil
 }
 

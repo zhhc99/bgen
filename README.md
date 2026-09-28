@@ -104,6 +104,7 @@ front-matter-defaults:        # markdown 元数据的默认值
 title: Hello World
 date: 2024-01-01
 tags: [tech, life]
+cover_caption: Tom the Cat        # 封面图注. 留空不显示
 ignore: false                     # 默认 false. 设置为 true 则忽略该文
 slug: slug-to-this-post           # 默认为文件名
 summary: people in the world...   # 默认从文章截取

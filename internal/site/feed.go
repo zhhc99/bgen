@@ -110,8 +110,13 @@ func buildContent(p *Post, baseURL, postURL string) string {
 		return content
 	}
 	coverURL := absolutifyURLs(`src="`+p.Cover+`"`, baseURL, postURL)
-	cover := `<img ` + coverURL + ` alt="` + html.EscapeString(p.Title) + `" style="max-width:100%"><br>` + "\n"
-	return cover + content
+	cover := `<img ` + coverURL + ` alt="` + html.EscapeString(p.Title) + `" style="max-width:100%">`
+	if p.CoverCaption != "" {
+		cover = `<figure>` + cover + `<figcaption>` + html.EscapeString(p.CoverCaption) + `</figcaption></figure>`
+	} else {
+		cover += `<br>`
+	}
+	return cover + "\n" + content
 }
 
 func stripUIElements(html string) string {

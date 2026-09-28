@@ -40,6 +40,8 @@ bgen 是一个用 Go 写的极简静态博客生成器, 面向有一定技术基
 
 界面文案统一通过 Config.Text 读取, text-override 只覆盖指定项, 其余使用内置默认值. RSS 封面的替代文本使用文章标题.
 
+封面图注从 front matter 的 `cover_caption` 传入 `Post.CoverCaption`, 按普通文本转义. 文章页按封面, 图注, TOC, 正文的顺序输出, RSS 全文也包含图注. 图注随封面显示.
+
 ## 技术栈
 
 - 语言: Go
@@ -68,13 +70,7 @@ bgen help
 - `layouts/single.html` 覆盖文章页模板
 - `static/style.css` 完全替换内置样式
 
-`static/custom.css` 用于增量补充和覆盖当前主题. 构建时通过 `Site.HasCustomCSS` 告知模板该文件是否存在. 默认布局在文件存在时加载它, 放在 `style.css` 和代码高亮样式之后, URL 带上 `BasePath` 前缀.
-
-静态文件原样复制, 浏览器按 CSS 层叠规则处理覆盖. 同优先级时后加载的声明生效, 选择器权重和 `!important` 仍然有效.
-
-自定义 `layouts/base.html` 时, 需保留 `custom.css` 的条件引用.
-
-默认样式应简洁美观, 可直接用于发布.
+`static/custom.css` 用于增量调整样式, 模板通过 `Site.HasCustomCSS` 判断是否加载. 静态文件原样复制, 资源 URL 带上 `BasePath` 前缀. 主题接口与覆盖方式见 [主题编写指南](THEME.md).
 
 ## 计划做的事
 

@@ -9,7 +9,12 @@
     {{if .Post.Tags}}{{range .Post.Tags}}<a href="{{$.Site.Config.BasePath}}/tags/{{.}}/">#{{.}}</a> {{end}}{{end}}
   </div>
   {{if .Post.Cover}}
+  {{if .Post.CoverCaption}}<figure class="cover-figure">{{end}}
   <img src="{{.Site.Config.BasePath}}{{.Post.Cover}}" alt="{{.Post.Title}}" class="featured-image">
+  {{if .Post.CoverCaption}}
+    <figcaption>{{.Post.CoverCaption}}</figcaption>
+  </figure>
+  {{end}}
   {{end}}
   {{if .Post.TOC}}
   <details class="toc">
