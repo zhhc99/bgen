@@ -8,6 +8,7 @@ import (
 	"path/filepath"
 	"strings"
 	"testing"
+	"time"
 
 	"github.com/zhhc99/bgen/internal/build"
 )
@@ -373,6 +374,55 @@ func TestBuild_RemovesUnpublishedContent(t *testing.T) {
 	}
 	if data, err := os.ReadFile(filepath.Join(out, "kept.txt")); err != nil || string(data) != "current asset" {
 		t.Fatalf("static asset lost: %v", err)
+	}
+}
+
+func TestBuild_PreservesAssetModTime(t *testing.T) {
+	if _, err := exec.LookPath("pandoc"); err != nil {
+		t.Skip("pandoc not found in PATH")
+	}
+	dir := makeProject(t)
+	out := filepath.Join(dir, "output")
+	mustWrite(t, filepath.Join(dir, "content/posts/bundle/index.md"), "---\ntitle: Bundle\n---\n![asset](images/asset.png)\n")
+	assets := map[string]string{
+		"static/style.css":                      "style.css",
+		"static/nested/asset.txt":               "nested/asset.txt",
+		"content/posts/hello.png":               "posts/hello/cover.png",
+		"content/posts/bundle/cover.png":        "posts/bundle/cover.png",
+		"content/posts/bundle/images/asset.png": "posts/bundle/images/asset.png",
+	}
+	for src := range assets {
+		mustWrite(t, filepath.Join(dir, src), "original asset")
+	}
+	for _, content := range []string{"original asset", "original asset", "updated asset"} {
+		mtime := time.Date(2000, 1, 1, 0, 0, 0, 0, time.UTC)
+		if content == "updated asset" {
+			mtime = mtime.Add(time.Hour)
+			for src := range assets {
+				mustWrite(t, filepath.Join(dir, src), content)
+			}
+		}
+		for src := range assets {
+			if err := os.Chtimes(filepath.Join(dir, src), mtime, mtime); err != nil {
+				t.Fatal(err)
+			}
+		}
+		if err := build.Run(dir, out); err != nil {
+			t.Fatal(err)
+		}
+		for _, dest := range assets {
+			path := filepath.Join(out, dest)
+			info, err := os.Stat(path)
+			if err != nil {
+				t.Fatal(err)
+			}
+			if !info.ModTime().Equal(mtime) {
+				t.Errorf("%s: mtime = %v, want %v", dest, info.ModTime(), mtime)
+			}
+			if data, err := os.ReadFile(path); err != nil || string(data) != content {
+				t.Errorf("%s: content = %q, want %q (%v)", dest, data, content, err)
+			}
+		}
 	}
 }
 

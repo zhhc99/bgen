@@ -216,7 +216,7 @@ func (s *Site) copyCoverImages(outPath string) error {
 		if err != nil {
 			return err
 		}
-		if err := writeFile(dest, f); err != nil {
+		if err := copyFile(dest, f); err != nil {
 			f.Close()
 			return err
 		}
@@ -243,7 +243,7 @@ func (s *Site) copyBundleImages(outPath string) error {
 			if err != nil {
 				return fmt.Errorf("opening %s: %w", absPath, err)
 			}
-			if err := writeFile(dest, f); err != nil {
+			if err := copyFile(dest, f); err != nil {
 				f.Close()
 				return fmt.Errorf("copying %s: %w", relPath, err)
 			}
@@ -279,6 +279,17 @@ func writeFile(dest string, src io.Reader) error {
 	return err
 }
 
+func copyFile(dest string, src *os.File) error {
+	info, err := src.Stat()
+	if err != nil {
+		return err
+	}
+	if err := writeFile(dest, src); err != nil {
+		return err
+	}
+	return os.Chtimes(dest, info.ModTime(), info.ModTime())
+}
+
 func copyDir(src, dest string) error {
 	return filepath.WalkDir(src, func(path string, d fs.DirEntry, err error) error {
 		if os.IsNotExist(err) {
@@ -297,6 +308,6 @@ func copyDir(src, dest string) error {
 			return err
 		}
 		defer f.Close()
-		return writeFile(target, f)
+		return copyFile(target, f)
 	})
 }
